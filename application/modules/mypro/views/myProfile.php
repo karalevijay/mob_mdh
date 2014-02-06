@@ -27,7 +27,6 @@
                 </li>
 
             </ul>
-           yes
         </div> 
 
     </div>
