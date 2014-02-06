@@ -165,7 +165,6 @@ class Mypro extends My_Controller
                 );
                
         $flag=$this->myprofile_model->save_my_pharmacy($data);
-        
         if($flag == 0)
         {
                 $form_data['old_data'] = '';
