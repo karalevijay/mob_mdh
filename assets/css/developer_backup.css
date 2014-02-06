@@ -1,0 +1,180 @@
+/*@media screen and (orientation:landscape)
+{
+    header #logo img
+    {
+        width:20%;
+    }
+    
+    header#headerSecond #logo img
+    {
+        width:50%;
+    }
+
+    header#headerSecond #logo
+    {
+        width:50%;
+        text-align:left !important;
+    }
+
+    ul[data-role='listview'] {
+        margin-top: 1%;
+    }
+    
+    
+        div#error_rotate
+    {
+        display: none;
+    }
+    #graph_rotate
+    {
+        display: inline;
+    }
+    section#section_rotate
+    {
+        display: inline;
+    }
+    header.header_rotate
+    {
+        height: 0px;
+        display: none;
+    }
+    footer#footer_rotate
+    {
+    
+        display: none;
+    }
+
+}
+
+
+@media screen and (orientation: portrait) 
+{
+    #graph_rotate
+    {
+        display: none;
+    }
+    
+}*/
+
+
+@media screen and (orientation: portrait) 
+{
+    div#error_rotate
+    {
+        display: inline;
+    }
+    footer#footer_rotate
+    {
+        display: inline;
+    }
+    #graph_rotate
+    {
+        display: none;
+    }
+}
+
+@media screen and (orientation:landscape)
+{
+/*    header #logo img
+    { 
+        width:30%;
+    }
+    
+    header#headerSecond #logo img
+    {
+        width:50%;
+    }
+
+    header#headerSecond #logo
+    {
+        width:50%;
+        text-align:left !important;
+    }*/
+
+
+    ul[data-role='listview'] {
+        margin-top: 1%;
+    }
+    div#error_rotate
+    {
+        display: none;
+    }
+    #graph_rotate
+    {
+        display: block;
+    }
+}
+
+@media screen and (min-width: 480px)
+{
+/*header #logo img
+    { 
+        width:30%;
+    }*/
+
+/*    header#headerSecond #logo img
+    {
+        width:50%;
+    }*/
+
+    header#headerSecond #logo
+    {
+        width:50%;
+        text-align:left !important;
+    }
+
+
+    ul[data-role='listview'] {
+        margin-top: 1%;
+    }
+    div#error_rotate
+    {
+        display: none;
+    }
+    #graph_rotate
+    {
+        display: block;
+    }    
+}
+
+
+    ol {list-style-type: decimal}
+
+.smallFont3 .ui-btn-inner{font-size:16px;}
+
+td.extra
+{
+    max-width: 50px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+#checkbox
+{
+    padding-top: 3px;
+    padding-bottom: 5px;
+    margin-top: -10px;
+}
+
+footer
+{
+    background: none repeat scroll 0 0 #FFFFFF;
+    border-top: 3px solid #D7D7D7;
+    bottom: 0;
+    padding: 4px 2%;
+    width: 96%;
+    position:absolute;
+    height:30px;
+    overflow: hidden;
+}
+
+ #loaderr { display: none; background:#000; }
+     #loaderr { display: block; position: absolute; left: 100px; top: 0;background:#000; }
+     
+     
+     .error1{
+display: block;
+text-align: center;
+     }
+ 
+  

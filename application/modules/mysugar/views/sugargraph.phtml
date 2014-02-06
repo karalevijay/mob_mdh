@@ -1,0 +1,579 @@
+<?php
+$this->title = "Sugar Graph";
+$this->headTitle($this->title);
+$this->headScript()->appendFile($this->APP_RELATIVE_SERVER_URL . '/js/highcharts.js');
+$this->headScript()->appendFile($this->APP_RELATIVE_SERVER_URL . '/js/highcharts-more.js');
+$this->headScript()->appendFile($this->APP_RELATIVE_SERVER_URL . '/js/grouped-categories.js');
+$this->headScript()->appendFile($this->APP_RELATIVE_SERVER_URL . '/js/jquery.simplemodal.js');
+//$this->headLink()->appendStylesheet($this->APP_RELATIVE_SERVER_URL . '/css/smallgreen/jquery-ui-1.8.17.custom.css');
+?>
+<!--<script src="http://code.highcharts.com/highcharts-more.js"></script>
+        <script src="http://code.highcharts.com/modules/exporting.js"></script>
+        <script src="http://blacklabel.github.io/grouped_categories/grouped-categories.js"></script>-->
+
+<script type="text/javascript">
+    $(function() {
+        $("#visible #tableData .sugarCount tr td:last-child").css("border-left","2px solid #000");
+        $("#visible #tableData .sugarCount tr td:nth-child(odd)").css("border-right","2px solid #000");
+        $("#a1c_note").click(function() {
+            $('#DvLayer-a1c-LightBox').modal();
+        });
+
+        <?php if($this->pieData) { ?>
+                $('#pie').highcharts({// highcharts for pie
+                    chart: {
+                        plotBackgroundColor: null,
+                        plotBorderWidth: 0,
+                        plotShadow: false
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    legend: {
+                        width: 50,
+                        floating: true,
+                        align: 'left',
+                        x: 70, // = marginLeft - default spacingLeft
+                        itemWidth: 70,
+                        borderWidth: 0
+                    },
+                    title: {
+                        text: ''
+                    },
+                    tooltip: {
+                        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                    },
+                    plotOptions: {
+                        pie: {
+                            dataLabels: {
+                                enabled: true,
+                                distance: -30,
+                                formatter: function() {
+                                    return this.y + "%"
+                                },
+                                style: {
+                                    fontWeight: 'bold',
+                                    color: 'white',
+                                    fontSize: '20px',
+                                    textShadow: '0px 1px 2px black'
+                                }
+                            },
+                            events: {
+                                legendItemClick: function() {
+                                    return false;
+                                }
+                            },
+                            point: {
+                                events: {
+                                    legendItemClick: function() {
+                                        return false; // <== returning false will cancel the default action
+                                    }
+                                }
+                            },
+                            showInLegend: true,
+                            startAngle: 0,
+                            endAngle: 360,
+                            //center: ['50%', '75%']
+                            allowPointSelect: false,
+                        },
+                    },
+                    series: [{
+                            type: 'pie',
+                            name: 'Share',
+                            innerSize: '55%',
+                            data: [
+                                <?php if($this->pieData['above']) { ?>{name: 'Above Target Range', y: <?php echo $this->pieData['above'] ?>, color: '#e68e13'},<?php } ?>
+                                <?php if($this->pieData['exact']) { ?>{name: 'Target Range', y: <?php echo $this->pieData['exact'] ?>, color: '#6f9a15'},<?php } ?>
+                                <?php if($this->pieData['below']) { ?>{name: 'Below Target Range', y: <?php echo $this->pieData['below'] ?>, color: '#c15644'}<?php } ?>
+                            ]
+                        }]
+                });
+        <?php } ?>
+        $("#trends").highcharts({//highcharts for trends
+            chart: {
+                borderColor: 'black',
+                borderWidth: 2,
+                borderRadius: 10,
+				marginBottom: 110
+            },
+            credits: {
+                enabled: false
+            },
+            tooltip: {
+                formatter: function() {
+
+                    if(this.series.name == 'range' ||this.series.name == 'Your Target Range' ){
+                      return false ;
+                    // to disable the tooltip at a point return false 
+                    }else {
+                        return this.y ;
+                    }   
+                },
+                style: {
+                    color: '#fff',
+                    float: 'right'
+                },
+                backgroundColor: '#0783b6'
+            },
+            xAxis: {
+                title: {
+                    text: 'Testing Times',
+                    x: 25,
+                    style: {
+                            color: 'Black',
+                            fontWeight: 'bold',
+                            fontSize: '16px',
+                            fontFamily: 'Museo300'
+                    }
+                },
+                labels: {
+                    style: {
+                        color: 'Black',
+                        fontSize: '13px'
+                    },
+                    useHTML: true
+                },
+                min: 0,
+                max: 7,
+                plotLines: [{
+                        color: '#000',
+                        width: 1,
+                        value: [-0.5]
+                    }, {
+                        color: '#000',
+                        width: 1,
+                        value: [0.5]
+                    },
+                    {
+                        color: '#000',
+                        width: 1,
+                        value: [1.5]
+                    }, {
+                        color: '#000',
+                        width: 1,
+                        value: [2.5]
+                    }, {
+                        color: '#000',
+                        width: 1,
+                        value: [3.5]
+                    }, {
+                        color: '#000',
+                        width: 1,
+                        value: [4.5]
+                    }, {
+                        color: '#000',
+                        width: 1,
+                        value: [5.5]
+                    }, {
+                        color: '#000',
+                        width: 1,
+                        value: [6.5]
+                    }, {
+                        color: '#000',
+                        width: 1,
+                        value: [7.5]
+                    }, {
+                        color: '#000',
+                        width: 1,
+                        value: [8]
+                    }],
+                categories: [{
+                        name: "<b style='font-family: Museo300;'>Breakfast</b>",
+                        categories: ["Before", "After"]
+                    }, {
+                        name: "<b style='font-family: Museo300;'>Lunch</b>",
+                        categories: ["Before", "After"]
+                    }, {
+                        name: "<b style='font-family: Museo300;'>Supper</b>",
+                        categories: ["Before", "After"]
+                    }, {
+                        name: "<b style='font-family: Museo300;'>Bedtime</b>",
+                        categories: ["&nbsp;"]
+                    },
+                    {
+                        name: "<b style='font-family: Museo300;'>Night</b>",
+                        categories: ["&nbsp;"]
+                    }]
+            },
+            yAxis: {
+                title: {
+                    text: 'Blood Glucose Level (mg/dL)',
+                    x: -5,
+                    style: {
+                            color: 'Black',
+                            fontWeight: 'bold',
+                            fontSize: '16px',
+                            fontFamily: 'Museo300'
+                    }
+                    
+                },
+                labels: {
+                    style: {
+                        color: 'Black',
+                        fontSize: '13px'
+                    },
+                    useHTML: true
+                },
+                min: 0
+            },
+            title: {
+                text: ''
+            },
+            series: [
+                 {
+                   type: 'arearange',
+                   name: 'Your Target Range',
+                   //showInLegend: false,
+                   data: [
+                   [-0.5,<?php echo $this->targets->bm_min ?>,<?php echo $this->targets->bm_max ?>],
+                   [0.5,<?php echo $this->targets->bm_min ?>,<?php echo $this->targets->bm_max ?>]],
+                   color: '#88b32e'
+                },
+                {
+                   type: 'arearange',
+                   name: 'range',
+                   showInLegend: false,
+                   data: [
+                   [0.5,<?php echo $this->targets->am_min ?>,<?php echo $this->targets->am_max ?>],
+                   [1.5,<?php echo $this->targets->am_min ?>,<?php echo $this->targets->am_max ?>]],
+                   color: '#88b32e'
+                },
+                {
+                   type: 'arearange',
+                   name: 'range',
+                   showInLegend: false,
+                   data: [
+                   [1.5,<?php echo $this->targets->bm_min ?>,<?php echo $this->targets->bm_max ?>],
+                   [2.5,<?php echo $this->targets->bm_min ?>,<?php echo $this->targets->bm_max ?>]],
+                   color: '#88b32e'
+                },
+                {
+                   type: 'arearange',
+                   name: 'range',
+                   showInLegend: false,
+                   data: [
+                   [2.5,<?php echo $this->targets->am_min ?>,<?php echo $this->targets->am_max ?>],
+                   [3.5,<?php echo $this->targets->am_min ?>,<?php echo $this->targets->am_max ?>]],
+                   color: '#88b32e'
+                },
+                {
+                   type: 'arearange',
+                   name: 'range',
+                   showInLegend: false,
+                   data: [
+                   [3.5,<?php echo $this->targets->bm_min ?>,<?php echo $this->targets->bm_max ?>],
+                   [4.5,<?php echo $this->targets->bm_min ?>,<?php echo $this->targets->bm_max ?>]],
+                   color: '#88b32e'
+                },
+                {
+                   type: 'arearange',
+                   name: 'range',
+                   showInLegend: false,
+                   data: [
+                   [4.5,<?php echo $this->targets->am_min ?>,<?php echo $this->targets->am_max ?>],
+                   [5.5,<?php echo $this->targets->am_min ?>,<?php echo $this->targets->am_max ?>]],
+                   color: '#88b32e'
+                },
+                {
+                   type: 'arearange',
+                   name: 'range',
+                   showInLegend: false,
+                   data: [
+                   [5.5,<?php echo $this->targets->bt_min ?>,<?php echo $this->targets->bt_max ?>],
+                   [6.5,<?php echo $this->targets->bt_min ?>,<?php echo $this->targets->bt_max ?>]],
+                   color: '#88b32e'
+                },
+                {
+                   type: 'arearange',
+                   name: 'range',
+                   showInLegend: false,
+                   data: [
+                   [6.5,<?php echo $this->targets->bt_min ?>,<?php echo $this->targets->bt_max ?>],
+                   [7.5,<?php echo $this->targets->bt_min ?>,<?php echo $this->targets->bt_max ?>]],
+                   color: '#88b32e'
+                },
+                  {
+                    type: 'scatter',
+                    name: 'Above Target Range',
+                    marker: {
+                        symbol: 'url(/images/trend/high.png)'
+                    },
+                    //data: [7.0, {x: 5, y: 15}, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, {y: 26.5}]
+                    //data: [{x: 0, y: 200}, {x: 0, y: 120}, {x: 5, y: 160}, {x: 5, y: 200}, {x: 6, y: 300}]
+                    data: [<?php if(is_array($this->aboveRange)){  
+                        
+                                foreach ($this->aboveRange as $arr) {
+                                    echo '{'.$arr.'},';
+                                }
+                        
+                    } else {  ?>
+                        {}
+                    <?php } ?>]
+                }, {
+                    type: 'scatter',
+                    name: 'Below Target Range',
+                    marker: {
+                        symbol: 'url(/images/trend/low.png)'
+                    },
+                    //data: [{y: 3.9}, 4.2, {x: 5, y: 25},{x: 5, y: 15}, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6]
+                    //data: [{x: 0, y: 150}, {x: 0, y: 100}, {x: 5, y: 140}, {x: 5, y: 160}, {x: 6, y: 200}]
+                    data: [<?php if(is_array($this->belowRange)){  
+                        
+                                foreach ($this->belowRange as $arr) {
+                                    echo '{'.$arr.'},';
+                                }
+                        
+                    } else {  ?>
+                        {}
+                    <?php } ?>]
+                },{
+                    type: 'scatter',
+                    name: 'In Target Range',
+                    marker: {
+                        symbol: 'circle',
+                        fillColor: '#000'
+                    },
+                    //data: [{y: 3.9}, 4.2, {x: 5, y: 25},{x: 5, y: 15}, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6]
+                    //data: [{x: 0, y: 160}, {x: 0, y: 110}, {x: 5, y: 155}, {x: 5, y: 170}, {x: 6, y: 220}]
+                    data: [<?php if(is_array($this->inRange)){  
+                        
+                                foreach ($this->inRange as $arr) {
+                                    echo '{'.$arr.'},';
+                                }
+                        
+                    } else {  ?>
+                        {}
+                    <?php } ?>]
+                },{
+                        type: 'line',
+                        name: 'Median',
+                        color: '#000',
+                        //showInLegend: false,
+                        //data: [[0, 1.11], [5, 4.51]],
+                        data:[<?php foreach ($this->medians as $key => $med){
+                            if($med){
+                                if($key == "bb_med")
+                                    echo '[0,'.$med.'],';
+                                if($key == "ab_med")
+                                    echo '[1,'.$med.'],';
+                                if($key == "bl_med")
+                                    echo '[2,'.$med.'],';
+                                if($key == "al_med")
+                                    echo '[3,'.$med.'],';
+                                if($key == "bs_med")
+                                    echo '[4,'.$med.'],';
+                                if($key == "as_med")
+                                    echo '[5,'.$med.'],';
+                                if($key == "bt_med")
+                                    echo '[6,'.$med.'],';
+                                if($key == "nt_med")
+                                    echo '[7,'.$med.'],';
+                            }
+                        } ?>
+                        ],
+                        marker: {
+                            enabled: false
+                        },
+                        states: {
+                            hover: {
+                                lineWidth: 0
+                            }
+                        },
+                        enableMouseTracking: false
+                    }
+            ],
+            legend: {
+                width: 300,
+                floating: true,
+                align: 'left',
+                x: 50, // = marginLeft - default spacingLeft
+                y: 5,
+                itemWidth: 150,
+                borderWidth: 0,
+                style: {
+                        color: 'Black',
+                        fontSize: '12px'
+                }
+            },
+            plotOptions: {
+                arearange: {
+                   events: {
+                        legendItemClick: function () {
+                           return false; 
+                           // <== returning false will cancel the default action
+                            }
+                        }
+                }
+            }
+        });
+    });
+
+    function navigate(select) {
+        top.location.href = "/index.php/sugar/index/sugargraph/date_range/" + select.options[select.selectedIndex].value;
+    }
+
+</script>
+<div id="navigation">
+    <a href="<?php echo $this->url(array(), 'lab_summary_list'); ?>" class="first-nav">Summary</a>
+    <a href="<?php echo $this->url(array(), 'sugar_index_list'); ?>">Sugar Log</a>
+    <a href="<?php echo $this->url(array(), 'sugar_index_list'); ?>" class="active">Sugar Graph</a>
+    <a href="<?php echo $this->url(array(), 'lab_a1c_list'); ?>">A1C</a>
+    <a href="<?php echo $this->url(array(), 'lab_weight_list'); ?>">Weight</a>
+    <a href="<?php echo $this->url(array(), 'lab_bp_list'); ?>">Blood Pressure</a>
+    <a href="<?php echo $this->url(array(), 'lab_cholesterol_list'); ?>">Cholesterol</a>
+</div>
+<div id="content">
+    
+    <div class="row">
+		<span class="heading20">Sugar Graph</span>
+    </div>
+    <div id="graphTop">
+        <span id="selectionDiv" >
+            Show Me Past
+            <select name="graphDate" id="graphNavigate" onchange="navigate(this)">
+                <option <?php if ($this->dateRange == 1) echo "selected='selected'"; ?> value="1">1 day</option>
+                <option <?php if ($this->dateRange == 7) echo "selected='selected'"; ?> value="7">7 days</option>
+                <option <?php if ($this->dateRange == 14) echo "selected='selected'"; ?> value="14">14 days</option>
+                <option <?php if ($this->dateRange == 30) echo "selected='selected'"; ?> value="30">30 days</option>
+                <option <?php if ($this->dateRange == 60) echo "selected='selected'"; ?> value="60">60 days</option>
+                <option <?php if ($this->dateRange == 90) echo "selected='selected'"; ?> value="90">90 days</option>
+            </select>
+            Of Sugar Trends
+        </span>
+    </div>
+    <div id="trends">
+
+    </div>
+    <div id="visible">
+        <div id="pie">
+
+        </div>
+        <div id="tableData">
+            <!-- <span>Highest Blood Sugar : <?php echo $this->highestSugar ?></span><br><br>
+            <span>Lowest Blood Sugar : <?php echo $this->lowestSugar ?></span><br><br>
+            <span>Average Blood Sugar : <?php echo $this->sugarAvg ?></span><br><br>
+            <span>Estimated A1C : <?php echo $this->estA1c ?></span>
+            <?php if ($this->estA1c == "--") { ?>
+                                                                                                                                    <a href="javascript:void(0);" id="a1c_note">Why can't I view my estimated A1C?</a>
+            <?php } ?> -->
+
+            <table class="sugarCount" cellpadding="0" cellspacing="0">
+                <tr>
+                    <th></th>
+                    <th colspan="2">Breakfast</th>
+                    <th colspan="2">Lunch</th>
+                    <th colspan="2">Supper</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                <tr class="noBor">
+                    <td></td>
+                    <td>BEFORE</td>
+                    <td>AFTER</td>
+                    <td>BEFORE</td>
+                    <td>AFTER</td>
+                    <td>BEFORE</td>
+                    <td>AFTER</td>
+                    <td>BEDTIME</td>
+                    <td>NIGHT</td>
+                </tr>
+                <tr>
+
+                    <td>Average</td>
+
+                    <td><?php echo $this->avgSugars->avg_bb ?></td>
+                    <td><?php echo $this->avgSugars->avg_ab ?></td>
+                    <td><?php echo $this->avgSugars->avg_bl ?></td>
+                    <td><?php echo $this->avgSugars->avg_al ?></td>
+                    <td><?php echo $this->avgSugars->avg_bs ?></td>
+                    <td><?php echo $this->avgSugars->avg_as ?></td>
+                    <td><?php echo $this->avgSugars->avg_bt ?></td>
+                    <td><?php echo $this->avgSugars->avg_nt ?></td>
+                </tr>
+                <tr>
+                    <td>Median</td>
+                    <td><?php echo $this->medians_display['bb_med'] == null ? '--': $this->medians_display['bb_med'] ?></td>
+                    <td><?php echo $this->medians_display['ab_med'] == null ? '--': $this->medians_display['ab_med'] ?></td>
+                    <td><?php echo $this->medians_display['bl_med'] == null ? '--': $this->medians_display['bl_med'] ?></td>
+                    <td><?php echo $this->medians_display['al_med'] == null ? '--': $this->medians_display['al_med'] ?></td>
+                    <td><?php echo $this->medians_display['bs_med'] == null ? '--': $this->medians_display['bs_med'] ?></td>
+                    <td><?php echo $this->medians_display['as_med'] == null ? '--': $this->medians_display['as_med'] ?></td>
+                    <td><?php echo $this->medians_display['bt_med'] == null ? '--': $this->medians_display['bt_med'] ?></td>
+                    <td><?php echo $this->medians_display['nt_med'] == null ? '--': $this->medians_display['nt_med'] ?></td>
+                </tr>
+                <tr>
+                    <td>Standard Deviation</td>
+                    <td><?php echo $this->sd['bb_sd'] == null ? '--': $this->sd['bb_sd'] ?></td>
+                    <td><?php echo $this->sd['ab_sd'] == null ? '--': $this->sd['ab_sd'] ?></td>
+                    <td><?php echo $this->sd['bl_sd'] == null ? '--': $this->sd['bl_sd'] ?></td>
+                    <td><?php echo $this->sd['al_sd'] == null ? '--': $this->sd['al_sd'] ?></td>
+                    <td><?php echo $this->sd['bs_sd'] == null ? '--': $this->sd['bs_sd'] ?></td>
+                    <td><?php echo $this->sd['as_sd'] == null ? '--': $this->sd['as_sd'] ?></td>
+                    <td><?php echo $this->sd['bt_sd'] == null ? '--': $this->sd['bt_sd'] ?></td>
+                    <td><?php echo $this->sd['nt_sd'] == null ? '--': $this->sd['nt_sd'] ?></td>
+                </tr>
+            </table>
+
+        </div>
+        <span id="tableName">Sugar Data Table</span>
+        <div id="moreVisualinfo">
+            <ul class="highestSugar">
+                <li>
+                    <div class="content">Highest Blood Sugar</div>
+                    <div class="count <?php echo $this->highFlag ? 'Brown':'Green'; ?>"><?php echo $this->highestSugar == 0 ? '--':$this->highestSugar ?></div>
+                </li>
+                <li>
+                    <div class="content">Lowest Blood Sugar</div>
+                    <div class="count <?php echo $this->lowFlag ? 'Pich':'Green'; ?>"><?php echo $this->lowestSugar == 0 ? '--':$this->lowestSugar ?></div>
+                </li>
+                <li>
+                    <div class="content">Blood Sugar Average</div>
+                    <div class="count <?php if($this->avgFlagMax) echo 'Brown' ; elseif($this->avgFlagMin) echo "Pich"; else echo 'Green'; ?>"><?php echo $this->sugarAvg == 0 ? '--':$this->sugarAvg ?></div>
+                </li>
+                <div class="clear"></div>
+                <li>
+                    <div class="content">Estimated A1C<?php if ($this->estA1c != "--") { ?>&#42;<?php } ?></div>
+                    <div class="count Blue"><?php echo $this->estA1c ?></div>
+                </li>
+                <li>
+                    <div class="content">Average # of tests per day</div>
+                    <div class="count Blue"><?php echo $this->noOftestsPerDay == 0 ? '--':$this->noOftestsPerDay ?></div>
+                </li>
+                <li>
+                    <div class="content">Average # of tests per week</div>
+                    <div class="count Blue"><?php echo $this->noOfTestsPerWeek == null ? '--': $this->noOfTestsPerWeek; ?></div>
+                </li>
+            </ul>
+            <?php if ($this->estA1c == "--") { ?>
+                <a href="javascript:void(0);" id="a1c_note">Why can't I view my estimated A1C?</a>
+            <?php }else{ ?>
+                <p>&#42;Estimated A1C is calculated based on the last 90 days of data.</p>
+            <?php } ?>
+        </div>
+
+        <div id="patternData">
+            <b>Pattern Summary</b><br><br>
+            <span>Number of low blood sugars in selected time period: <?php echo $this->lowSugars == 0 ? '--':$this->lowSugars ; ?></span><br>
+            <span>Number of high blood sugars in selected time period: <?php echo $this->highSugars== 0 ? '--':$this->highSugars ; ?></span><br>
+            <span>The majority of your low blood sugars are occurring: <?php echo $this->mostLows ?></span><br>
+            <span>The majority of your high blood sugars are occurring: <?php echo $this->mostHighs ?></span>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- popup -->
+<div id="DvLayer"></div>
+
+<div class="DvLayerCon" id="DvLayer-a1c-LightBox">
+    <div id="acPopWrap">
+        <a href="#" title="Close" class="simplemodal-close closeBtnLogin" ></a>
+        <p>We need more data in your sugar log to give you the most accurate estimate of your A1C. To see this number, you need to have the following in your sugar log:</p>
+        <ol>
+            <li>At least 30 days of data within the last 90 days</li>
+            <li>At least 40 blood glucose readings within the last 90 days</li>
+            <li>At least 14 days of data within the last 30 days</li>
+        </ol>
+    </div>
+</div>
